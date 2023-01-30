@@ -1,0 +1,4 @@
+Bastante bueno
+Has definido interfaces, cuando debias heredar clases
+Las interfaces no las has utilizado para nada
+Has hecho que la clase test imprima todo de cada clase, en vez de ceder la responsabilidad a cada clase
