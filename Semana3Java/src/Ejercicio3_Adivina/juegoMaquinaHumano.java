@@ -11,28 +11,38 @@ import java.util.Scanner;
  */
 
 public class juegoMaquinaHumano {
+	
+	
+	static int nInicio = 0;
+	static int nFin = 1000;
+	static boolean Humano = true;
+	
 
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
 		Random random = new Random();
 
-		boolean Humano = true;
-
 		/**
 		 * Ejecutamos el bucle hasta que se llegue al acierto con ambos métodos
 		 */
 		while (true) {
-			if (!Humano) {
-				int nInicio = 0;
-				int nFin = 1000;
-				TurnoMaquina(input, random, nInicio, nFin);
+			if (!Humano) {				
+				TurnoMaquina(input, random, nInicio, nFin);				
 				Humano = true;
 			} else {
 				TurnoHumano(input, random);
 				Humano = false;
 			}
 		}
+				
 	}
+	/**
+	 * Método para el turno de la maquina
+	 * @param input
+	 * @param random
+	 * @param nInicio
+	 * @param nFin
+	 */
 
 	public static void TurnoMaquina(Scanner input, Random random, int nInicio, int nFin) {
 		System.out.println("Turno máquina");
@@ -45,17 +55,17 @@ public class juegoMaquinaHumano {
 			 */
 			nAdivinar = random.nextInt(nFin - nInicio + 1) + nInicio;
 			System.out.println("La máquina eligió: " + nAdivinar);
-			System.out.print("¿El número es mayor o menor? (M = mayor, m = menor, C = correcto): ");
-			String response = input.next();
+			System.out.print("¿El número es mayor o menor? (1 = mayor, 2 = menor, 3 = correcto): ");
+			String respuesta = input.next();
 			/**
 			 * Se compara el número de la máquina con el que pensamos y orientamos con
 			 * mayor, menor o correcto
 			 */
-			if (response.equalsIgnoreCase("M")) {
+			if (respuesta.equalsIgnoreCase("1")) {
 				nInicio = nAdivinar + 1;
-			} else if (response.equalsIgnoreCase("m")) {
+			} else if (respuesta.equalsIgnoreCase("2")) {
 				nFin = nAdivinar - 1;
-			} else if (response.equalsIgnoreCase("C")) {
+			} else if (respuesta.equalsIgnoreCase("3")) {
 				System.out.println("La máquina acertó!");
 				break;
 			} else {
@@ -64,6 +74,11 @@ public class juegoMaquinaHumano {
 		}
 	}
 
+	/**
+	 * Método para el turno del humano
+	 * @param input
+	 * @param random
+	 */
 	public static void TurnoHumano(Scanner input, Random random) {
 		System.out.println("Turno del humano");
 		int numero = random.nextInt(1000) + 1;
