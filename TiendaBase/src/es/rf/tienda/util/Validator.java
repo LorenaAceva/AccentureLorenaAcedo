@@ -1,6 +1,7 @@
 package es.rf.tienda.util;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,7 +35,7 @@ public class Validator {
 	/**
 	 * Permite verificar que un DNI cumple con el patron XX.XXX.XXX-L
 	 */
-	private final static String DNI_PATTERN = "\\d{2}\\.\\d{3}\\.\\d{3}-[a-zA-Z]";
+	private final static String DNI_PATTERN = "^[0-9]{2}[.][0-9]{3}[.][0-9]{3}[-][A-Za-z]$";
 		
 	/**
 	 * Permite validar un telefono, el cual debe contener de 10 a 20 digitos
@@ -51,6 +52,11 @@ public class Validator {
 	 * Longitud que debe tener todo DNI pasado a la aplicacion.
 	 */
 	private final static int LONGITUD_DNI = 12;
+	
+	/**
+	 * Formato que debe tener la fecha introducida
+	 */
+	private static final String DATE_FORMAT = "dd/MM/yyyy";
 
 	/* ***************************************************************************************
 	 * NOMBRE: isAlfanumeric                                                                 *
@@ -58,7 +64,7 @@ public class Validator {
 	 * DESCRIPCI�N: *//**
 	 * 		Permite verificar que el texto pasado solo contiene caracters alfanumericos
 	 * 
-	 * @param texto String a verificar que solo tenga car�cteres alfanumericos
+	 * @param texto String a verificar que solo tenga carácteres alfanumericos
 	 * 
 	 * @return  true, si cumple solo contiene caracters alfanumericos. <br> 
 	 * 			false en caso contrario
@@ -74,13 +80,6 @@ public class Validator {
 		 */
 		Pattern p= Pattern.compile(ALFANUMERIC_PATTERN);
 		
-		/**
-		 * Si el String está vacio, devolverá falso
-		 */
-		
-		if (texto==null) {
-			return false;
-		}
 		
 		/**
 		 * La clase pattern contiene el método matcher que nos ayudará a encontrar coincidencias
@@ -103,7 +102,7 @@ public class Validator {
 	 * 		El phone number debe tener un total de entre 10 y 20, contando digitos y espacios.
 	 * 		Minimo aceptable son 10 digitos.
 	 * 
-	 * @param phoneNumber String con el n�mero de telefono de entre 10 y 20 dgitos. 
+	 * @param phoneNumber String con el número de telefono de entre 10 y 20 dgitos. 
 	 * 		Puede tener espacios, pero siempre con 10 digitos como minimo.
 	 * 
 	 * @return true, si cumple todas las condiciones
@@ -126,11 +125,11 @@ public class Validator {
 	 * NOMBRE: isEmailValido                                                                 *
 	 * 
 	 * DESCRIPCI�N: *//**
-	 * 			Comprueba si el email tiene un formato que pueda ser valido.
+	 * 			Comprueba si el email tiene un formato que pueda ser válido.
 	 * 
 	 * @param email String a comprobar
 	 * 
-	 * @return true, en caso que el formato sea v�lido
+	 * @return true, en caso que el formato sea válido
 	 * FECHA: Enero 2023
 	 * 
 	 * AUTOR: Lorena Acedo
@@ -151,31 +150,54 @@ public class Validator {
 	 * NOMBRE: cumpleDNI                                                                 *
 	 * 
 	 * DESCRIPCI�N: *//**
-	 * 			Esta funcion verifica que el DNI cumple el siguiente formato: xx.xxx.xxx-L <br>
-	 * 			El DNI ha de tener longitud 12
+	 * Esta funcion verifica que el DNI cumple el siguiente formato: xx.xxx.xxx-L <br>
+	 * El DNI ha de tener longitud 12
 	 * 
 	 * @param dni String con DNI a ser validado
 	 * 
 	 * @return true, si el DNI cumple el estandar nacional.
+	 * 
+	 * El filtro creado comprueba la veracidad del DNI
+	 * 
 	 * FECHA: Enero 2023
 	 * AUTOR: Lorena Acedo
 	 * 
 	 * **************************************************************************************/
 	public static boolean cumpleDNI(String dni){
-		
-		
-		/*return dni.matches(DNI_PATTERN);*/
-		
-		
-					
-		
-	}
+				
+		/**
+		 * Comprobamos el patrón del DNI
+		 */
+		Pattern p=Pattern.compile(DNI_PATTERN);
+		Matcher matcher = p.matcher(dni);
+	    if (!matcher.matches()) {
+	      return false;
+	    }
+	 
+	    /**
+	     * 
+	     */
+	    char letter = dni.charAt(dni.length() - 1);
+	    String number = dni.substring(0, dni.length() - 2).replace(".", "");
+	    return letter==calculaLetra(number);
+		}
+	
+		/**
+		 * Se calcula que la letra sea la correcta
+		 * @param number
+		 * @return
+		 */
+	    public static char calculaLetra(String number) {
+	    int dniValor=Integer.parseInt(number);
+	    char[] letra= LETRA_DNI.toCharArray();
+	    return letra[dniValor%23];
+	    }  
 	
 
 	/** ***************************************************************************************
 	 * NOMBRE: cumpleRango                                                                 *
 	 * 
-	 * DESCRIPCI�N: *//**
+	 * DESCRIPCION: *//**
 	 * 		Comprueba que un Numero se necuentra entre 2 valores
 	 * 
 	 * @param valor (int)/(double) Numero a comprobar
@@ -208,7 +230,7 @@ public class Validator {
 	 * 
 	 * DESCRIPCI�N: *//**
 	 * 		Comprobar que el texto pasado tiene una longitud de al menos x caracteres, siendo
-	 * 		x el entero pasado como par�metro
+	 * 		x el entero pasado como parámetro
 	 * 
 	 * @param texto String texto a comprobar
 	 * @param longitudMinima int que indique longitud minima.
@@ -232,12 +254,12 @@ public class Validator {
 	 * 
 	 * DESCRIPCI�N: *//**
 	 * 		Comprobar que el texto pasado tiene una longitud de, como mucho, x caracteres, siendo
-	 * 		x el entero pasado como par�metro
+	 * 		x el entero pasado como parámetro
 	 * 
 	 * @param texto String con el texto a comprobar
-	 * @param longitudMaxima int con la longitud maxima del texto
+	 * @param longitudMaxima int con la longitud máxima del texto
 	 * 
-	 * @return true, si el texto es menor o igual que la longitud maxima.
+	 * @return true, si el texto es menor o igual que la longitud máxima.
 	 * FECHA: Enero 2023 
 	 * AUTOR: Lorena Acedo 
 	 * 
@@ -285,7 +307,8 @@ public class Validator {
 	 */
 	
 	public static boolean valDateMin(LocalDate fecha, LocalDate min){
-		return true;
+		
+		return fecha.isAfter(min) || fecha.isEqual(min);
 		
 	}
 	
@@ -296,7 +319,7 @@ public class Validator {
 	 * @return
 	 */
 	public static boolean valDateMax(LocalDate fecha, LocalDate max){
-		return true;
+		return fecha.isBefore(max) || fecha.isEqual(max);
 		
 	}	
 	
@@ -308,13 +331,14 @@ public class Validator {
 	 */
 	public static boolean esFechaValida(String fecha){
 		try {
-			LocalDate.parse(fecha);
-			return true;
-		}catch (DateTimeParseException e) {
-		return false;
-		}
-		
-	}
+		      DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+		      LocalDate localDate = LocalDate.parse(fecha, formatter);
+		      return true;
+		    } catch (DateTimeParseException e) {
+		      return false;
+		 }
+	 }
+	
 	
 	/**
 	 * Nombre esPasswordValida
