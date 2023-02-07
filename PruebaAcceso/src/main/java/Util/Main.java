@@ -11,13 +11,27 @@ public class Main {
 	 * Se solicita a la clase Controlador que nos presente la lista de paises
 	 * 
 	 * @param args
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public static void main(String[] args) throws Exception {
-		
+
 		CountryController cc = new CountryController();
 		List<Country> ll = cc.leerTodos();
 		listarCtr(ll);
+
+		System.out.println("------------------------------------------");
+		System.out.println(cc.leerUno("BR"));
+
+		Country datos = cc.leerUno("BR");
+		datos.setCountry_name("Se ha modificado");
+		System.out.println("Afectados: " + cc.actualizar(datos));
+
+		System.out.println("------------------------------------------");
+		System.out.println(cc.leerUno("BR"));
+
+		Country datos1 = cc.leerUno("BR");
+		System.out.println("Borrando datos: " + cc.borrar(datos1));
+
 	}
 
 	/**
